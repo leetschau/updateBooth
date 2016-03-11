@@ -86,20 +86,16 @@ for (key in worksheet) {
     accessories: accessories
   };
 
-  db.ExpomapBooth.findOne({'expomapId': expomapId, 'uttranceId': utteranceId},
-      function(err, doc) {
-        if (!err) {
-          console.log('updating: ' + doc._id);
-          db.ExpomapBooth.update({_id: doc._id}, {$set: {info: info} },
-               function() {
-                 updatedBoothNum = updatedBoothNum + 1;
-                 if (boothCountInFile === updatedBoothNum) {
-                   console.log('doc ' + doc._id + ' update over, closing db');
-                   db.close();
-                 }
-               });
-        }
-        else { console.log(err); }
-      });
+  db.ExpomapBooth.update({'expomapId': expomapId, 'uttranceId': utteranceId},
+       {$set: {info: info} },
+       function() {
+         updatedBoothNum = updatedBoothNum + 1;
+         if (boothCountInFile === updatedBoothNum) {
+           //console.log('doc ' + doc._id + ' update over, closing db');
+           console.log('updatedBoothNum = ' + updatedBoothNum +
+                       ' update over, closing db');
+           db.close();
+         }
+       });
   console.log('updating a booth over');
 }
