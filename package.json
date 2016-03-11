@@ -1,0 +1,16 @@
+{
+  "name": "updatebooth",
+  "version": "0.0.1",
+  "description": "update expomap booth information",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Li Chao",
+  "license": "ISC",
+  "dependencies": {
+    "mongojs": "^2.3.0",
+    "xlsx": "^0.8.0"
+  }
+}
