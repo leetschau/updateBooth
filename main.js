@@ -58,18 +58,16 @@ var worksheet = workbook.Sheets[first_sheet_name];
 var mongojs = require('mongojs');
 var db = mongojs(targetMongo, targetCollection);
 
-var boothCountInFile = 0;
-var updatedBoothNum = 0;
+var counter = { boothInFile: 0, updated: 0, updateFailed: 0 };
+
 for (key in worksheet) {
   if (!key.startsWith(indexDict.boothIdCol)) { continue; }
   if (! /[A-Z0-9]+/.test(worksheet[key].v)) {
     console.log('Bad format: booth Id: ' + worksheet[key].v + ' skipped.');
     continue;
   }
-  boothCountInFile = boothCountInFile + 1;
-  console.log('starting exact a booth, boothCountInFile=' + boothCountInFile);
+  counter.boothInFile = counter.boothInFile + 1;
   var utteranceId = worksheet[key].v;
-  //console.log(utteranceId);
   var rowNum = key.slice(1);
   var accessories = indexDict.accessories.map(
     function(acc) { return { kind: acc.name,
@@ -88,14 +86,22 @@ for (key in worksheet) {
 
   db.ExpomapBooth.update({'expomapId': expomapId, 'uttranceId': utteranceId},
        {$set: {info: info} },
-       function() {
-         updatedBoothNum = updatedBoothNum + 1;
-         if (boothCountInFile === updatedBoothNum) {
-           //console.log('doc ' + doc._id + ' update over, closing db');
-           console.log('updatedBoothNum = ' + updatedBoothNum +
-                       ' update over, closing db');
-           db.close();
+       function(err, res) {
+         if (!err) {
+           // DEBUG console.log('res: ' + JSON.stringify(res));
+           counter.updated = counter.updated + 1;
+           if (counter.boothInFile ===
+               (counter.updated + counter.updateFailed)) {
+             db.close();
+             console.log(counter.boothInFile +
+                         ' booths updated over (success: ' + counter.updated +
+                         ', failed: ' + counter.updateFailed + '). DB closed');
+           }
+         } else {
+           counter.updateFailed = counter.updateFailed + 1;
+           console.log('Booth ID ' + utteranceId +
+                       ' update failed with err msg: ' + err);
          }
-       });
-  console.log('updating a booth over');
+       }
+  );
 }
