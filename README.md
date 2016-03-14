@@ -1,7 +1,7 @@
 # Introduction
 
-从Excel文件(.xlsx)中读取需要更新的展位数据，
-更新到MongoDB中。
+从Excel文件(.xlsx)的Sheet[0]中读取需要更新的展位数据更新到MongoDB中。
+如果你增加了多个Sheet导入功能，请给我发PR.
 
 # Usage
 
@@ -9,6 +9,12 @@
 npm install
 node main.js
 ```
+
+使用的库：
+
+[mafintosh/mongojs](https://github.com/mafintosh/mongojs)
+
+[SheetJS/js-xlsx](https://github.com/SheetJS/js-xlsx)
 
 # Discussion
 
