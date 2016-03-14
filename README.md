@@ -3,6 +3,13 @@
 从Excel文件(.xlsx)中读取需要更新的展位数据，
 更新到MongoDB中。
 
+# Usage
+
+```lang=bash
+npm install
+node main.js
+```
+
 # Discussion
 
 Q: 程序使用3个counter作为计数器，如何保证counter不会发生race condition?
